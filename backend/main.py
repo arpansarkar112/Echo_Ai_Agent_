@@ -181,12 +181,17 @@ async def get_profile(client: Client = Depends(get_authenticated_client)):
     """Fetches the profile for the logged-in user."""
     try:
         user_id = client.auth.get_user().user.id
-        res = client.table("profiles").select("full_name, display_name").eq("id", user_id).single().execute()
+        # Use a standard select and check the result, which is more robust
+        res = client.table("profiles").select("full_name, display_name").eq("id", user_id).execute()
         
+        # If no data is returned, it means no profile exists yet.
         if not res.data:
-            return Profile()
+            # Manually insert a profile for the user if one doesn't exist.
+            # This handles cases for users who signed up before the profile table was created.
+            client.table("profiles").insert({"id": user_id}).execute()
+            return Profile() # Return a default empty profile for the frontend
             
-        return res.data
+        return res.data[0]
     except Exception as e:
         print("!!! GET PROFILE CRASHED !!!")
         traceback.print_exc()
@@ -199,8 +204,14 @@ async def update_profile(profile: Profile, client: Client = Depends(get_authenti
         user_id = client.auth.get_user().user.id
         profile_data = profile.dict(exclude_unset=True)
         
+        # The Supabase client now correctly handles the 'updated_at' field automatically
+        # if the column is configured to default to now() or has a trigger.
+        # If not, you might need to add it manually:
+        # profile_data['updated_at'] = 'now()'
+        
         res = client.table("profiles").update(profile_data).eq("id", user_id).execute()
         
+        # The update operation returns the updated data in res.data
         if not res.data:
             raise HTTPException(status_code=404, detail="Profile not found to update")
 
