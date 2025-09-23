@@ -181,17 +181,12 @@ async def get_profile(client: Client = Depends(get_authenticated_client)):
     """Fetches the profile for the logged-in user."""
     try:
         user_id = client.auth.get_user().user.id
-        # Use a standard select and check the result, which is more robust
-        res = client.table("profiles").select("full_name, display_name").eq("id", user_id).execute()
+        res = client.table("profiles").select("full_name, display_name").eq("id", user_id).single().execute()
         
-        # If no data is returned, it means no profile exists yet.
         if not res.data:
-            # Manually insert a profile for the user if one doesn't exist.
-            # This handles cases for users who signed up before the profile table was created.
-            client.table("profiles").insert({"id": user_id}).execute()
-            return Profile() # Return a default empty profile for the frontend
+            return Profile()
             
-        return res.data[0]
+        return res.data
     except Exception as e:
         print("!!! GET PROFILE CRASHED !!!")
         traceback.print_exc()
@@ -203,14 +198,13 @@ async def update_profile(profile: Profile, client: Client = Depends(get_authenti
     try:
         user_id = client.auth.get_user().user.id
         profile_data = profile.dict(exclude_unset=True)
-        profile_data['updated_at'] = 'now()'
         
         res = client.table("profiles").update(profile_data).eq("id", user_id).execute()
         
-        # After updating, fetch the new profile to return it
-        updated_res = client.table("profiles").select("full_name, display_name").eq("id", user_id).single().execute()
-        
-        return updated_res.data
+        if not res.data:
+            raise HTTPException(status_code=404, detail="Profile not found to update")
+
+        return res.data[0]
     except Exception as e:
         print("!!! UPDATE PROFILE CRASHED !!!")
         traceback.print_exc()
