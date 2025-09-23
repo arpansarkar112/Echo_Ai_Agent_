@@ -1,8 +1,9 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/components/auth/AuthProvider";
 
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
 async function fetchProfile(accessToken: string) {
-  const response = await fetch("http://localhost:8001/profile", {
+  const response = await fetch(`${apiUrl}/profile`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
