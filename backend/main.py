@@ -1,7 +1,8 @@
 import os
 import traceback
+import base64
 from dotenv import load_dotenv
-from fastapi import FastAPI, Depends, HTTPException, Header, Request
+from fastapi import FastAPI, Depends, HTTPException, Header, Request, Form, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from supabase import create_client, Client
@@ -88,16 +89,21 @@ def get_authenticated_client(authorization: str = Header(...)) -> Client:
 # --- API Endpoints ---
 
 @app.post("/chat", response_model=ChatResponse)
-async def chat(chat_request: ChatRequest, client: Client = Depends(get_authenticated_client)):
-    """Handles a new chat message from the user."""
+async def chat(
+    message: str = Form(...),
+    session_id: Optional[str] = Form(None),
+    file: Optional[UploadFile] = File(None),
+    client: Client = Depends(get_authenticated_client)
+):
+    """Handles a new chat message from the user, now with file uploads."""
     try:
         user_id = client.auth.get_user().user.id
-        session_id = chat_request.session_id
-        user_message = chat_request.message
+        user_message = message
 
         # 1. Create a new session if one doesn't exist
         if not session_id:
-            title = " ".join(user_message.split()[:5]) + "..."
+            title_text = user_message if user_message else "Image analysis"
+            title = " ".join(title_text.split()[:5]) + "..."
             session_res = client.table("chat_sessions").insert({"user_id": user_id, "title": title}).execute()
             session_id = session_res.data[0]['id']
 
@@ -108,9 +114,31 @@ async def chat(chat_request: ChatRequest, client: Client = Depends(get_authentic
             "content": user_message
         }).execute()
 
-        # 3. Get AI response
+        # 3. Get AI response (handling file if present)
         llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"))
-        ai_response = llm.invoke([HumanMessage(content=user_message)])
+        
+        # Prepare content for the model
+        content_parts = []
+        if user_message:
+            content_parts.append(user_message)
+        
+        if file:
+            # Ensure the file is an image for Gemini
+            if not file.content_type.startswith("image/"):
+                raise HTTPException(status_code=400, detail="Only image files are supported for now.")
+            
+            image_bytes = await file.read()
+            # The HumanMessage expects a specific dict structure for images
+            content_parts.append({
+                "type": "image_url",
+                "image_url": f"data:{file.content_type};base64,{base64.b64encode(image_bytes).decode()}"
+            })
+
+        if not content_parts:
+            raise HTTPException(status_code=400, detail="No message or file content provided.")
+
+        human_message = HumanMessage(content=content_parts)
+        ai_response = llm.invoke([human_message])
         ai_message = ai_response.content
 
         # 4. Save AI message

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Send, Bot } from "lucide-react";
+import { Send, Bot, Paperclip, X } from "lucide-react";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 interface Message {
@@ -26,10 +26,12 @@ export function ChatInterface() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { user, session } = useAuth();
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
+    if (!inputValue.trim() && !selectedFile) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -40,18 +42,33 @@ export function ChatInterface() {
 
     setMessages(prev => [...prev, userMessage]);
     const currentInputValue = inputValue;
+    const currentFile = selectedFile;
+    
     setInputValue("");
+    setSelectedFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
     setIsLoading(true);
 
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    
+    const formData = new FormData();
+    formData.append('message', currentInputValue);
+    if (sessionId) {
+      formData.append('session_id', sessionId);
+    }
+    if (currentFile) {
+      formData.append('file', currentFile);
+    }
+
     try {
       const response = await fetch(`${apiUrl}/chat`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: session ? `Bearer ${session.access_token}` : "",
         },
-        body: JSON.stringify({ message: currentInputValue, session_id: sessionId }),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -87,6 +104,23 @@ export function ChatInterface() {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
+    }
+  };
+
+  const handleFileSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setSelectedFile(e.target.files[0]);
+    }
+  };
+
+  const clearFile = () => {
+    setSelectedFile(null);
+    if(fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -148,22 +182,46 @@ export function ChatInterface() {
       </ScrollArea>
       
       <div className="border-t bg-card/50 p-4">
-        <div className="max-w-3xl mx-auto flex gap-2">
-          <Input
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask me anything or describe what you'd like to create..."
-            className="flex-1"
-            disabled={isLoading}
-          />
-          <Button 
-            onClick={handleSendMessage} 
-            disabled={!inputValue.trim() || isLoading}
-            className="gradient-primary hover:shadow-glow"
-          >
-            <Send className="h-4 w-4" />
-          </Button>
+        <div className="max-w-3xl mx-auto">
+          {selectedFile && (
+            <div className="bg-muted/50 p-2 rounded-md mb-2 flex items-center justify-between text-sm">
+              <span className="truncate">{selectedFile.name}</span>
+              <Button variant="ghost" size="icon" onClick={clearFile} className="h-6 w-6">
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
+          <div className="flex gap-2">
+            <Input
+              id="file-upload"
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <Button 
+              variant="outline" 
+              onClick={handleFileSelect} 
+              disabled={isLoading}
+            >
+              <Paperclip className="h-4 w-4" />
+            </Button>
+            <Input
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Ask me anything or describe what you'd like to create..."
+              className="flex-1"
+              disabled={isLoading}
+            />
+            <Button 
+              onClick={handleSendMessage} 
+              disabled={(!inputValue.trim() && !selectedFile) || isLoading}
+              className="gradient-primary hover:shadow-glow"
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </div>
