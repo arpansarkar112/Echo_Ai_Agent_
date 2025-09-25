@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useToast } from "@/components/ui/use-toast";
 
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 interface Session {
   session_id: string;
   title: string | null;
@@ -34,7 +36,7 @@ export default function PastChats() {
     if (!session) return;
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8001/sessions", {
+      const res = await fetch(`${apiUrl}/sessions`, {
         headers: {
           Authorization: `Bearer ${session.access_token}`,
         },
@@ -56,7 +58,7 @@ export default function PastChats() {
   const handleDelete = async (sessionId: string) => {
     if (!session) return;
     try {
-      const res = await fetch(`http://localhost:8001/sessions/${sessionId}`, {
+      const res = await fetch(`${apiUrl}/sessions/${sessionId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${session.access_token}`,
