@@ -1,76 +1,87 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useProfile } from "@/hooks/use-profile";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { useMutation } from "@tanstack/react-query";
+
+const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+async function updateProfileRequest({ fullName, displayName, accessToken }: { fullName: string; displayName: string; accessToken: string }) {
+  const response = await fetch(`${apiUrl}/profile`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ full_name: fullName, display_name: displayName }),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to update profile");
+  }
+  return response.json();
+}
 
 const Profile = () => {
-  const { session } = useAuth();
   const { toast } = useToast();
+  const { session } = useAuth();
+  const { data: profile, isLoading, isError, invalidateProfileQuery } = useProfile();
+  
   const [fullName, setFullName] = useState("");
   const [displayName, setDisplayName] = useState("");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      if (!session) return;
-      setLoading(true);
-      try {
-        const response = await fetch("http://localhost:8001/profile", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-        });
-        if (!response.ok) throw new Error("Failed to fetch profile");
-        const data = await response.json();
-        setFullName(data.full_name || "");
-        setDisplayName(data.display_name || "");
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Could not load your profile data.",
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (profile) {
+      setFullName(profile.full_name || "");
+      setDisplayName(profile.display_name || "");
+    }
+  }, [profile]);
 
-    fetchProfile();
-  }, [session, toast]);
-
-  const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!session) return;
-    try {
-      const response = await fetch("http://localhost:8001/profile", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({ full_name: fullName, display_name: displayName }),
-      });
-      if (!response.ok) throw new Error("Failed to update profile");
+  const mutation = useMutation({
+    mutationFn: updateProfileRequest,
+    onSuccess: () => {
       toast({
         title: "Success",
         description: "Your profile has been updated successfully.",
       });
-    } catch (error) {
+      invalidateProfileQuery(); // Refetch the profile data to show the latest info
+    },
+    onError: () => {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Could not update your profile.",
       });
-    }
+    },
+  });
+
+  const handleUpdateProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!session?.access_token) return;
+    
+    mutation.mutate({ fullName, displayName, accessToken: session.access_token });
   };
 
-  if (loading) {
-    return <div>Loading profile...</div>;
+  useEffect(() => {
+    if (isError) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not load your profile data.",
+      });
+    }
+  }, [isError, toast]);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto p-4">
+        <p>Loading profile...</p>
+      </div>
+    );
   }
 
   return (
@@ -93,6 +104,7 @@ const Profile = () => {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Your full name"
+                disabled={mutation.isPending}
               />
             </div>
             <div className="space-y-2">
@@ -102,11 +114,14 @@ const Profile = () => {
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
                 placeholder="What should Echo call you?"
+                disabled={mutation.isPending}
               />
             </div>
           </CardContent>
           <CardFooter className="flex gap-2">
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit" disabled={mutation.isPending}>
+              {mutation.isPending ? "Saving..." : "Save Changes"}
+            </Button>
             <Button variant="outline" asChild>
               <Link to="/dashboard">Return</Link>
             </Button>
