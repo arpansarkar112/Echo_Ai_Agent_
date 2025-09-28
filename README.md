@@ -6,10 +6,10 @@ Hi! I’m Arpan Sarkar and I'm from SeAMK. This is my bachelor thesis project: E
 Echo is a web-based AI agent designed to automate repetitive tasks and make intelligent decisions using natural language. I built Echo to explore how large language models (LLMs) and robotic process automation (RPA) can work together to solve real-world problems.
 
 ## Background & Motivation
-During my studies, I noticed that many automation tools are either too technical or limited in scope. The recent emergence of AI agents capable of automating RPA tasks also deeply motivated me. My goal with Echo was to create an assistant that anyone can use—just type what you want, and Echo will figure out the rest. This project combines my interests in AI, software engineering, and user experience.
+During my studies, I noticed that many automation tools are either too technical or limited in scope. The recent emergence of AI agents capable of automating RPA tasks also deeply motivated me. This project combines my interests in AI, software engineering, and user experience.
 
 ## Features
-- **AI-Powered Intelligence:** Uses Google Gemini LLM to understand and process user instructions.
+- **AI-Powered Intelligence:** Uses the Google Gemini Pro model to understand and process user instructions.
 - **Natural Language Interface:** Interact with Echo using chat interface.
 - **RPA Task Execution:** Automates tasks like CSV data processing, form filling, and more.
 - **User Authentication:** Secure login and personalized profiles powered by Supabase.
