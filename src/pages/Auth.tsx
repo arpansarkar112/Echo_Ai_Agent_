@@ -30,7 +30,6 @@ export default function Auth() {
               Echo
             </h1>
           </div>
-
         </div>
         
         <div className="flex justify-center">

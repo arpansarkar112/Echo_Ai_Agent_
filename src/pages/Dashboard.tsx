@@ -20,11 +20,10 @@ export default function Dashboard() {
                 <div className="flex items-center gap-3">
                   <Bot className="h-5 w-5 text-primary" />
                   <div>
-                    <h1 className="text-xl font-semibold">Echo<span className="block text-sm text-muted-foreground">
+                    <h1 className="text-xl font-semibold"> Echo <span className="block text-sm text-muted-foreground">
                         {isLoading ? "Loading..." : `Welcome back, ${profile?.display_name || 'User'}`}
                       </span>
                     </h1>
-
                   </div>
                 </div>
               </div>
