@@ -113,7 +113,7 @@ export function ChatInterface() {
                   ? 'bg-primary text-primary-foreground' 
                   : 'bg-card'
               }`}>
-                <div className="prose prose-sm dark:prose-invert max-w-none text-white">
+                <div className="prose prose-sm dark:prose-invert max-w-none">
                   <ReactMarkdown>{message.content}</ReactMarkdown>
                 </div>
                 <div className="text-xs opacity-70 mt-2">
