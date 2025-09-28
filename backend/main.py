@@ -109,7 +109,7 @@ async def chat(chat_request: ChatRequest, client: Client = Depends(get_authentic
         }).execute()
 
         # 3. Get AI response
-        llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"))
+        llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=os.getenv("GOOGLE_API_KEY"))
         ai_response = llm.invoke([HumanMessage(content=user_message)])
         ai_message = ai_response.content
 
