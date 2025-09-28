@@ -5,3 +5,4 @@ langchain
 langchain-google-genai
 supabase
 langchain-community
+google-generativeai
