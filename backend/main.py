@@ -8,7 +8,6 @@ from supabase import create_client, Client
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import HumanMessage
 from typing import Optional, List
-import google.generativeai as genai
 
 # Load environment variables from .env file
 load_dotenv()
@@ -110,8 +109,8 @@ async def chat(chat_request: ChatRequest, client: Client = Depends(get_authentic
         }).execute()
 
         # 3. Get AI response
-        # Using gemini-pro model from Google Generative AI
-        llm = ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=os.getenv("GOOGLE_API_KEY"))
+        # Using gemini-pro-latest model from Google Generative AI
+        llm = ChatGoogleGenerativeAI(model="gemini-pro-latest", google_api_key=os.getenv("GOOGLE_API_KEY"))
         ai_response = llm.invoke([HumanMessage(content=user_message)])
         ai_message = ai_response.content
 
@@ -176,33 +175,6 @@ async def delete_session(session_id: str, client: Client = Depends(get_authentic
         print(f"!!! DELETE SESSION {session_id} CRASHED !!!")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
-
-
-# --- Diagnostic Endpoint ---
-@app.get("/list-models")
-async def list_models():
-    """
-    A diagnostic endpoint to list all available generative models from Google AI.
-    This helps in debugging which models are available for the configured API key.
-    """
-    try:
-        api_key = os.getenv("GOOGLE_API_KEY")
-        if not api_key:
-            raise HTTPException(status_code=500, detail="GOOGLE_API_KEY is not set in the environment.")
-        
-        genai.configure(api_key=api_key)
-        
-        models_list = []
-        for m in genai.list_models():
-            # We are interested in models that support 'generateContent'
-            if 'generateContent' in m.supported_generation_methods:
-                models_list.append({"name": m.name, "display_name": m.display_name})
-        
-        return {"models": models_list}
-    except Exception as e:
-        print("!!! LIST MODELS ENDPOINT CRASHED !!!")
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"An error occurred while fetching models: {str(e)}")
 
 
 @app.get("/profile", response_model=Profile)
