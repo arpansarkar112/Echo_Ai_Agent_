@@ -106,9 +106,7 @@ All colors MUST be HSL.
     --shadow-glow: 0 0 40px hsl(217 91% 60% / 0.2);
     --shadow-card: 0 4px 20px -4px hsl(222 25% 3% / 0.5);
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
