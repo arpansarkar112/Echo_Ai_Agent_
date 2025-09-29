@@ -87,35 +87,3 @@
     scroll-behavior: smooth;
   }
 }
-
-@layer utilities {
-  .gradient-primary {
-    background: var(--gradient-primary);
-  }
-  .gradient-hero {
-    background: var(--gradient-hero);
-  }
-  .shadow-elegant {
-    box-shadow: var(--shadow-elegant);
-  }
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
-  }
-  .shadow-card {
-    box-shadow: var(--shadow-card);
-  }
-  .transition-smooth {
-    transition: var(--transition-smooth);
-  }
-  .transition-bounce {
-    transition: var(--transition-bounce);
-  }
-  .glass-effect {
-    backdrop-filter: blur(20px);
-    background: hsla(var(--card) / 0.8);
-    border: 1px solid hsla(var(--border) / 0.2);
-  }
-  .dark .prose-force-white :where(p, h1, h2, h3, h4, strong, code, blockquote, li) {
-    color: white !important;
-  }
-}
