@@ -159,6 +159,38 @@ All colors MUST be HSL.
     background: hsla(var(--card) / 0.8);
     border: 1px solid hsla(var(--border) / 0.2);
   }
+
+  /* Force white text on all prose elements for dark mode */
+  .prose-force-white :where(p, h1, h2, h3, h4, strong, code, blockquote, li) {
+    color: white !important;
+  }
+}
+
+  .prose-dark-text-white-override :where(strong, h1, h2, h3, h4, p, li, a, blockquote, code) {
+    color: white !important;
+  }
+}
+
+@layer base {
+  .prose {
+    --tw-prose-invert-body: hsl(var(--foreground));
+    --tw-prose-invert-headings: hsl(var(--foreground));
+    --tw-prose-invert-lead: hsl(var(--foreground));
+    --tw-prose-invert-links: hsl(var(--foreground));
+    --tw-prose-invert-bold: hsl(var(--foreground));
+    --tw-prose-invert-counters: hsl(var(--foreground));
+    --tw-prose-invert-bullets: hsl(var(--foreground));
+    --tw-prose-invert-hr: hsl(var(--border));
+    --tw-prose-invert-quotes: hsl(var(--foreground));
+    --tw-prose-invert-quote-borders: hsl(var(--border));
+    --tw-prose-invert-captions: hsl(var(--muted-foreground));
+    --tw-prose-invert-code: hsl(var(--foreground));
+    --tw-prose-invert-pre-code: hsl(var(--foreground));
+    --tw-prose-invert-pre-bg: hsl(var(--background));
+    --tw-prose-invert-th-borders: hsl(var(--border));
+    --tw-prose-invert-td-borders: hsl(var(--border));
+  }
+}
 }
 
 /* Custom override for prose text color in dark mode */
