@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 const navigation = [
   { name: "Chat", href: "/dashboard", icon: MessageSquare },
@@ -79,7 +80,8 @@ export function DashboardSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
         
-        <div className="mt-auto p-4 border-t border-sidebar-border">
+        <div className="mt-auto p-4 space-y-4 border-t border-sidebar-border">
+          <ModeToggle />
           <Button
             variant="ghost"
             onClick={signOut}
