@@ -8,13 +8,16 @@ Echo is a web-based AI agent designed to automate repetitive tasks and make inte
 ## Background & Motivation
 During my studies, I noticed that many automation tools are either too technical or limited in scope. The recent emergence of AI agents capable of automating RPA tasks also deeply motivated me. This project combines my interests in AI, software engineering, and user experience.
 
-## Features
-- **AI-Powered Intelligence:** Uses the Google Gemini Pro model to understand and process user instructions.
-- **Natural Language Interface:** Interact with Echo using chat interface.
-- **RPA Task Execution:** Automates tasks like CSV data processing, form filling, and more.
-- **User Authentication:** Secure login and personalized profiles powered by Supabase.
-- **Chat History:** View and manage your past conversations and tasks.
-- **Extensible Design:** Built to be open and easy to extend for new use cases.
+### Key Features
+
+*   The application ensures a secure and personalized experience by providing a robust authentication system for user sign-up and login.
+*   Users can engage in real-time conversations with an intelligent AI assistant through a modern, intuitive, and responsive chat window.
+*   AI-generated responses are displayed with full support for Markdown, allowing for clearly formatted text that includes headings, lists, bold emphasis, and code blocks.
+*   The platform automatically saves all user interactions, providing a complete and accessible history of past conversations on a dedicated page.
+*   Users have the ability to select any previous chat session from their history, view the entire conversation log, and seamlessly continue the dialogue from where they left off.
+*   The application gives users complete control over their chat history, including the functionality to permanently delete old or unwanted conversation sessions.
+*   A dedicated profile page is available for users to view and manage their account information.
+*   The user interface is designed with a polished aesthetic that includes support for both a sleek Dark Mode and a clean Light Mode to accommodate user preference.
 
 ## Technologies Used
 - **Frontend:** React (Vite), TypeScript, Tailwind CSS, shadcn/ui
