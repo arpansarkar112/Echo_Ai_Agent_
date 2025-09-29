@@ -3,6 +3,7 @@ import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { useProfile } from "@/hooks/use-profile";
 import { Bot } from "lucide-react";
+import { ModeToggle } from "@/components/ui/mode-toggle";
 
 export default function Dashboard() {
   const { data: profile, isLoading } = useProfile();
@@ -27,6 +28,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
+              <ModeToggle />
             </div>
           </header>
           
