@@ -1,6 +1,6 @@
 # Echo AI Agent
 
-Hi! I’m Arpan Sarkar and I'm from SeAMK. This is my bachelor thesis project: Echo AI Agent.
+Hi! I’m Arpan Sarkar and I'm from SeAMK. This is my first web app project: Echo AI Agent.
 
 ## What is Echo?
 Echo is a web-based AI agent designed to automate repetitive tasks and make intelligent decisions using natural language. I built Echo to explore how large language models (LLMs) and robotic process automation (RPA) can work together to solve real-world problems.
@@ -17,7 +17,7 @@ During my studies, I noticed that many automation tools are either too technical
 *   Users have the ability to select any previous chat session from their history, view the entire conversation log, and seamlessly continue the dialogue from where they left off.
 *   The application gives users complete control over their chat history, including the functionality to permanently delete old or unwanted conversation sessions.
 *   A dedicated profile page is available for users to view and manage their account information.
-*   The user interface is designed with a polished aesthetic that includes support for both a sleek Dark Mode and a clean Light Mode to accommodate user preference.
+*  The user interface is designed with a polished aesthetic that includes support for both dark mode and Light Mode to accommodate user preference.
 
 ## Technologies Used
 - **Frontend:** React (Vite), TypeScript, Tailwind CSS, shadcn/ui
