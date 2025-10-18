@@ -10,11 +10,11 @@ export default function Dashboard() {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="flex h-screen w-full overflow-hidden">
         <DashboardSidebar />
         
-        <main className="flex-1 overflow-auto">
-          <header className="h-16 border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+        <main className="flex-1 flex flex-col overflow-hidden">
+          <header className="h-16 border-b border-border bg-card/60 backdrop-blur supports-[backdrop-filter]:bg-card/50 sticky top-0 z-40">
             <div className="flex items-center justify-between h-full px-6">
               <div className="flex items-center gap-4">
                 <SidebarTrigger />
@@ -32,7 +32,7 @@ export default function Dashboard() {
             </div>
           </header>
           
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 overflow-hidden">
             <ChatInterface />
           </div>
         </main>

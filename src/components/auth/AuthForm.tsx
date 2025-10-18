@@ -60,10 +60,12 @@ export function AuthForm({ mode, onToggle }: AuthFormProps) {
         
         navigate("/dashboard");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "An unexpected error occurred.";
       toast({
         title: "Error",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } finally {
@@ -122,7 +124,7 @@ export function AuthForm({ mode, onToggle }: AuthFormProps) {
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder="********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10"
@@ -153,3 +155,4 @@ export function AuthForm({ mode, onToggle }: AuthFormProps) {
     </Card>
   );
 }
+

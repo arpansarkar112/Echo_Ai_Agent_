@@ -5,3 +5,8 @@ langchain
 langchain-google-genai
 supabase
 langchain-community
+pandas
+tabulate
+semantic-kernel
+python-multipart
+matplotlib
