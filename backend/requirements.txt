@@ -3,7 +3,7 @@ uvicorn
 python-dotenv
 langchain==0.1.20
 langchain-google-genai==1.0.3
-google-generativeai
+google-generativeai==0.5.4
 supabase
 langchain-community==0.0.38
 pandas
