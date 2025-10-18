@@ -1,4 +1,5 @@
 import os
+import sys
 import traceback
 from pathlib import Path
 
@@ -17,6 +18,25 @@ try:
 except ImportError:  # pragma: no cover - fallback for older LangChain versions
     from langchain.schema import HumanMessage
 from typing import Optional, List
+
+import importlib
+import types
+
+try:
+    import google.generativeai.protos  # type: ignore[attr-defined]
+except ImportError:  # pragma: no cover - provide shim for newer SDK builds
+    try:
+        generative_language = importlib.import_module(
+            "google.ai.generativelanguage"
+        )
+        shim = types.ModuleType("google.generativeai.protos")
+        shim.Candidate = getattr(generative_language, "Candidate")
+        shim.Content = getattr(generative_language, "Content")
+        sys.modules["google.generativeai.protos"] = shim
+        google_generativeai = importlib.import_module("google.generativeai")
+        setattr(google_generativeai, "protos", shim)
+    except (ImportError, AttributeError):
+        pass
 
 from agents.csv_agent import CSVAgent, CSVAgentError
 
