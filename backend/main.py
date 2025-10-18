@@ -11,7 +11,11 @@ from supabase import create_client, Client
 from google.api_core.exceptions import GoogleAPIError
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
-from langchain.schema import HumanMessage
+
+try:
+    from langchain_core.messages import HumanMessage  # Newer LangChain builds
+except ImportError:  # pragma: no cover - fallback for older LangChain versions
+    from langchain.schema import HumanMessage
 from typing import Optional, List
 
 from agents.csv_agent import CSVAgent, CSVAgentError
