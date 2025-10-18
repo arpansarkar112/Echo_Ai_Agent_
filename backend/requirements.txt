@@ -1,11 +1,11 @@
 fastapi
 uvicorn
 python-dotenv
-langchain==0.2.11
+langchain==0.1.20
 langchain-google-genai==1.0.3
 google-generativeai
 supabase
-langchain-community==0.2.9
+langchain-community==0.0.32
 pandas
 tabulate
 semantic-kernel
