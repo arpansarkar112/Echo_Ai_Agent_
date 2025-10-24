@@ -30,8 +30,83 @@ except ImportError:  # pragma: no cover - provide shim for newer SDK builds
             "google.ai.generativelanguage"
         )
         shim = types.ModuleType("google.generativeai.protos")
-        shim.Candidate = getattr(generative_language, "Candidate")
-        shim.Content = getattr(generative_language, "Content")
+
+        module_candidates: list[types.ModuleType | str] = [
+            generative_language,
+            "google.ai.generativelanguage.types",
+            "google.ai.generativelanguage.types.content",
+            "google.ai.generativelanguage.types.content_pb2",
+            "google.ai.generativelanguage.types.generative_service",
+            "google.ai.generativelanguage.types.generative_service_pb2",
+            "google.ai.generativelanguage_v1.types",
+            "google.ai.generativelanguage_v1.types.content",
+            "google.ai.generativelanguage_v1.types.content_pb2",
+            "google.ai.generativelanguage_v1.types.generative_service",
+            "google.ai.generativelanguage_v1.types.generative_service_pb2",
+            "google.ai.generativelanguage_v1beta.types",
+            "google.ai.generativelanguage_v1beta.types.content",
+            "google.ai.generativelanguage_v1beta.types.content_pb2",
+            "google.ai.generativelanguage_v1beta.types.generative_service",
+            "google.ai.generativelanguage_v1beta.types.generative_service_pb2",
+        ]
+        module_cache: dict[str, types.ModuleType | None] = {}
+
+        def _resolve_symbol(name: str):
+            for candidate in module_candidates:
+                module: types.ModuleType | None
+                if isinstance(candidate, str):
+                    module = module_cache.get(candidate)
+                    if module is None:
+                        try:
+                            module = importlib.import_module(candidate)
+                        except ImportError:
+                            module = None
+                        module_cache[candidate] = module
+                else:
+                    module = candidate
+                if module and hasattr(module, name):
+                    return getattr(module, name)
+            raise AttributeError(name)
+
+        # Copy a core set of types that legacy callers expect.
+        for attr in (
+            "Blob",
+            "Candidate",
+            "Content",
+            "FunctionCall",
+            "FunctionResponse",
+            "Part",
+        ):
+            try:
+                setattr(shim, attr, _resolve_symbol(attr))
+            except AttributeError:
+                continue
+
+        def _shim_getattr(name: str):
+            return _resolve_symbol(name)
+
+        def _shim_dir():
+            names: set[str] = set()
+            for candidate in module_candidates:
+                module: types.ModuleType | None
+                if isinstance(candidate, str):
+                    module = module_cache.get(candidate)
+                    if module is None:
+                        try:
+                            module = importlib.import_module(candidate)
+                        except ImportError:
+                            module = None
+                        module_cache[candidate] = module
+                else:
+                    module = candidate
+                if module:
+                    names.update(name for name in dir(module) if not name.startswith("_"))
+            return sorted(names)
+
+        shim.__getattr__ = _shim_getattr  # type: ignore[attr-defined]
+        shim.__dir__ = _shim_dir  # type: ignore[attr-defined]
+        shim.__all__ = _shim_dir()
+
         sys.modules["google.generativeai.protos"] = shim
         google_generativeai = importlib.import_module("google.generativeai")
         setattr(google_generativeai, "protos", shim)
