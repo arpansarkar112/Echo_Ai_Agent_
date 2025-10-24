@@ -21,8 +21,7 @@ _IDENTITY_PHRASES = {
 
 _IDENTITY_RESPONSE = (
     "I'm Echo, the CSV AI agent. I help you work directly with CSV files - "
-    "running math and comparisons, visualising trends, and updating rows or columns. "
-    "I'm built specifically for the Echo application, not by Google."
+    "running math and comparisons, visualising trends, and updating rows or columns."
 )
 
 
