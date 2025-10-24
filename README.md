@@ -2,29 +2,32 @@
 
 Hi! I’m Arpan Sarkar and I'm from SeAMK. This is my first web app project: Echo AI Agent.
 
-## What is Echo?
-Echo is a web-based AI agent designed to automate repetitive tasks and make intelligent decisions using natural language. I built Echo to explore how large language models (LLMs) and robotic process automation (RPA) can work together to solve real-world problems.
+Echo is a web-based AI agent designed to automate repetitive tasks (such as handling csv files) and make intelligent decisions using natural language. I built Echo to explore how large language models (LLMs) and Agentic Ai can work together to solve real-world problems.
 
 ## Background & Motivation
-During my studies, I noticed that many automation tools are either too technical or limited in scope. The recent emergence of AI agents capable of automating RPA tasks also deeply motivated me. This project combines my interests in AI, software engineering, and user experience.
+During my studies, I noticed that many automation tools are either too technical or limited in scope. The recent emergence of AI agents capable of automating RPA tasks also deeply motivated me. This project combines my interests in AI, software engineering, and web development.
 
 ### Key Features
 
 *   The application ensures a secure and personalized experience by providing a robust authentication system for user sign-up and login.
-*   Users can engage in real-time conversations with an intelligent AI assistant through a modern, intuitive, and responsive chat window.
-*   AI-generated responses are displayed with full support for Markdown, allowing for clearly formatted text that includes headings, lists, bold emphasis, and code blocks.
+*   Users can engage in real-time conversations with an intelligent AI assistant.
+*   AI-generated responses are displayed with clear formatted text and standard fonts that includes headings, lists, bold emphasis, and code blocks.
 *   The platform automatically saves all user interactions, providing a complete and accessible history of past conversations on a dedicated page.
-*   Users have the ability to select any previous chat session from their history, view the entire conversation log, and seamlessly continue the dialogue from where they left off.
-*   The application gives users complete control over their chat history, including the functionality to permanently delete old or unwanted conversation sessions.
-*   A dedicated profile page is available for users to view and manage their account information.
-*  The user interface is designed with a polished aesthetic that includes support for both dark mode and Light Mode to accommodate user preference.
+*   Users have the ability to select any previous chat session from their history, view the entire conversation log, permanently delete old or unwanted conversation sessions, and continue the dialogue from where they left off.
+*   A dedicated profile page is available for users to view and manage their account name.
+*   The user interface is designed to support toggle between dark mode and Light Mode to accommodate user preference.
+*   The users have access to a personally trained agent model which is trained to handle only csv files. Also, in the front-end the chat pages handle message streaming, dataset uploads/downloads, dataset switching, and inline rendering of markdown plus generated      charts, while guarding uploads behind active sessions.
+*   The users can upload CSVs, fetch updated files, and load generated charts; datasets are scoped per session with access checks, and the planner executes rich intents such as set-cell, add-row, delete-row(s), row math, and bar/line plots.
+*   This application can always introduces itself properly as Echo.
 
 ## Technologies Used
-- **Frontend:** React (Vite), TypeScript, Tailwind CSS, shadcn/ui
-- **Backend:** Python (FastAPI), Supabase (PostgreSQL), Google Gemini API
+- **Frontend:** React (Vite), TypeScript, Tailwind CSS, shadcn/ui, Radix UI primitives, React Hook Form + Zod, TanStack React Query, Supabase JS SDK, React Markdown (remark-gfm), Lucide icons, Recharts.
+- **Backend:** Python (FastAPI), Supabase (PostgreSQL), Google Gemini API, Langchain-google-genai, Semantic Kernel, pandas, matplotlib, python-dotenv, python-multipart, uvicorn, tabulate.
+- **Tooling & Build:** Vite + SWC, ESLint, TypeScript, Tailwind CSS Typography, PostCSS / Autoprefixer, Supabase CLI
 - **Hosting:** Vercel (frontend), Render (backend)
 
 ## Live Demo
+- **Domain:** [https://www.ask-echo.me/](https://www.ask-echo.me/)
 - **Frontend:** [https://echo-ai-agent.vercel.app/](https://echo-ai-agent.vercel.app/)
 - **Backend:** [https://echo-backend-cdmq.onrender.com/](https://echo-backend-cdmq.onrender.com/)
 
