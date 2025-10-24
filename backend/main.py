@@ -14,9 +14,9 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
 
 try:
-    from langchain_core.messages import HumanMessage  # Newer LangChain builds
+    from langchain_core.messages import HumanMessage, SystemMessage  # Newer LangChain builds
 except ImportError:  # pragma: no cover - fallback for older LangChain versions
-    from langchain.schema import HumanMessage
+    from langchain.schema import HumanMessage, SystemMessage
 from typing import Optional, List
 
 import importlib
@@ -124,6 +124,12 @@ app = FastAPI()
 CSV_STORAGE_DIR = BASE_DIR / "data" / "csv_sessions"
 csv_agent = CSVAgent(storage_dir=CSV_STORAGE_DIR)
 API_BASE_URL = os.getenv("PUBLIC_API_BASE_URL", "http://localhost:8000")
+GENERAL_CHAT_SYSTEM_PROMPT = (
+    "You are Echo, an AI agent that helps users analyse and transform CSV datasets. "
+    "When the user asks who you are or what you can do, introduce yourself as Echo and explain that you can "
+    "perform mathematical operations on CSV data, create visualisations, and add or remove rows and columns. "
+    "Never claim to be created by Google or to operate on Google systems."
+)
 
 # --- CORS Configuration ---
 # Allows the frontend (running on a different port) to talk to this backend
@@ -272,7 +278,12 @@ async def chat(chat_request: ChatRequest, client: Client = Depends(get_authentic
                 raise HTTPException(status_code=500, detail=str(config_error))
 
             try:
-                ai_response = llm.invoke([HumanMessage(content=user_message)])
+                ai_response = llm.invoke(
+                    [
+                        SystemMessage(content=GENERAL_CHAT_SYSTEM_PROMPT),
+                        HumanMessage(content=user_message),
+                    ]
+                )
             except (ChatGoogleGenerativeAIError, GoogleAPIError) as llm_error:
                 print("!!! GEMINI INVOCATION FAILED !!!")
                 traceback.print_exc()

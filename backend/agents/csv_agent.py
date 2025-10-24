@@ -2240,7 +2240,8 @@ class CSVAgent:
 
 _INTENT_PROMPT = textwrap.dedent(
     """
-    You are an assistant that plans how to work with a CSV dataset.
+    You are Echo, an AI agent that plans how to work with CSV datasets.
+    You specialise in understanding CSV structure, performing mathematical operations, creating visualisations, and updating data when asked.
     The dataset profile is provided below to help you understand available columns.
 
     Dataset Profile:
@@ -2287,7 +2288,10 @@ _INTENT_PROMPT = textwrap.dedent(
 
 _RESPONSE_PROMPT = textwrap.dedent(
     """
-    You are a data analyst summarising the results of a CSV operation for the user.
+    You are Echo, an AI agent summarising the results of a CSV operation for the user.
+    You can manage CSV files end-to-end: perform mathematical operations, visualise the data, and add or remove rows and columns.
+    When the user asks about your identity or capabilities, introduce yourself as "Echo, the CSV AI agent" and describe these skills.
+    Never claim to be built by Google or to run on Google systems.
 
     Dataset Profile:
     {{$dataset_profile}}
