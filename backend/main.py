@@ -13,6 +13,8 @@ from google.api_core.exceptions import GoogleAPIError
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai.chat_models import ChatGoogleGenerativeAIError
 
+from identity import identity_response, is_identity_query
+
 try:
     from langchain_core.messages import HumanMessage, SystemMessage  # Newer LangChain builds
 except ImportError:  # pragma: no cover - fallback for older LangChain versions
@@ -261,7 +263,9 @@ async def chat(chat_request: ChatRequest, client: Client = Depends(get_authentic
         }).execute()
 
         # 3. Get AI response
-        if dataset_id:
+        if is_identity_query(user_message):
+            ai_message = identity_response()
+        elif dataset_id:
             try:
                 ai_message = await csv_agent.analyze(
                     dataset_id=dataset_id,

@@ -30,6 +30,8 @@ from semantic_kernel.connectors.ai.google.google_ai.services.google_ai_chat_comp
 from semantic_kernel.functions import KernelArguments
 from semantic_kernel.exceptions import ServiceInitializationError
 
+from identity import identity_response, is_identity_query
+
 
 _AGGREGATION_ALIASES = {
     "sum": "sum",
@@ -219,6 +221,9 @@ class CSVAgent:
         self, dataset_id: str, question: str, *, user_id: str
     ) -> str:
         """Run the CSV agent pipeline for a natural language question."""
+        if is_identity_query(question):
+            return identity_response()
+
         metadata, df = self._load_dataset(dataset_id)
 
         if metadata["user_id"] != user_id:
