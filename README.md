@@ -18,7 +18,7 @@ During my studies, I noticed that many automation tools are either too technical
 *   The user interface is designed to support toggle between dark mode and Light Mode to accommodate user preference.
 *   The users have access to a personally trained agent model which is trained to handle only csv files. Also, in the front-end the chat pages handle message streaming, dataset uploads/downloads, dataset switching, and inline rendering of markdown plus generated      charts, while guarding uploads behind active sessions.
 *   The users can upload CSVs, fetch updated files, and load generated charts; datasets are scoped per session with access checks, and the planner executes rich intents such as set-cell, add-row, delete-row(s), row math, and bar/line plots.
-*   This application can always introduces itself properly as Echo.
+*   This ai agent can always introduces itself properly as Echo.
 
 ## Technologies Used
 - **Frontend:** React (Vite), TypeScript, Tailwind CSS, shadcn/ui, Radix UI primitives, React Hook Form + Zod, TanStack React Query, Supabase JS SDK, React Markdown (remark-gfm), Lucide icons, Recharts.
