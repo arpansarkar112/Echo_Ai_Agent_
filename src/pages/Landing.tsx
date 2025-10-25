@@ -21,7 +21,7 @@ const features = [
 		icon: Bot,
 		title: "RPA Task Execution",
 		description:
-			"Currently supports CSV data processing and form filling. The framework is extensible for more tasks",
+			"Currently supports only CSV data processing. The framework is extensible for more tasks",
 	},
 	{
 		icon: Layers,
@@ -72,7 +72,7 @@ export default function Landing() {
 
 					<p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
 						Echo was developed to demonstrate how large language model (LLM)-powered
-						AI agents can perform robotic process automation tasks. The system
+						AI agents can perform robotic process automation tasks such as handling CSV files. The system
 						allows users to describe tasks in natural language, which the AI agent
 						interprets and executes as automated processes.
 					</p>
@@ -131,8 +131,7 @@ export default function Landing() {
 						Ready to build your first RPA Task?
 					</h2>
 					<p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-						Echo demonstrates the integration of AI agents and robotic process
-						automation. It was designed to explore how natural language can be used
+						Echo is currently handling csv files. User will explore how natural language can be used
 						to control automated workflows. You are welcome to test the system and
 						evaluate its effectiveness.
 					</p>
@@ -154,8 +153,7 @@ export default function Landing() {
 			<footer className="border-t border-border/40 py-8">
 				<div className="container mx-auto px-4 text-center text-muted-foreground">
 					<p>
-						&copy; 2025 Echo. Developed as part of the Bachelor’s Thesis at SeAMK
-						– Degree Programme in Automation Engineering, 2025–2026
+						&copy; Echo. Developed by Arpan Sarkar, 2025–2026
 					</p>
 				</div>
 			</footer>
