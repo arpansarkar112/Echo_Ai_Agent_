@@ -417,6 +417,7 @@ class CSVAgent:
             final_message = f"{final_message}\n\n{execution.table_markdown}"
 
         return final_message
+    
 
     def _read_dataframe(self, buffer: BytesIO) -> pd.DataFrame:
         buffer.seek(0)
@@ -471,6 +472,8 @@ class CSVAgent:
             "created_at": datetime.utcnow().isoformat() + "Z",
         }
         return metadata
+    
+
 
     def _summarize_dataset(
         self, metadata: Dict[str, Any], dataframe: pd.DataFrame
