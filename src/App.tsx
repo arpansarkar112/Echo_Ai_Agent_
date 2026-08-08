@@ -12,7 +12,13 @@ import PastChats from "./pages/PastChats";
 import ChatSession from "./pages/ChatSession";
 import Profile from "./pages/Profile";
 import Credit from "./pages/Credit";
+import DashboardOverview from "./pages/DashboardOverview";
 import NotFound from "./pages/NotFound";
+import About from "./pages/About";
+import Blog from "./pages/Blog";
+import Help from "./pages/Help";
+import Privacy from "./pages/Privacy";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -31,14 +37,19 @@ const App = () => (
                   <Dashboard />
                 </ProtectedRoute>
               } />
+              <Route path="/dashboard/chat" element={
+                <ProtectedRoute>
+                  <Dashboard component="chat" />
+                </ProtectedRoute>
+              } />
               <Route path="/dashboard/chats" element={
                 <ProtectedRoute>
-                  <PastChats />
+                  <Dashboard component="past-chats" />
                 </ProtectedRoute>
               } />
               <Route path="/dashboard/chats/:id" element={
                 <ProtectedRoute>
-                  <ChatSession />
+                  <Dashboard component="chat-session" />
                 </ProtectedRoute>
               } />
               <Route path="/dashboard/profile" element={
@@ -51,6 +62,11 @@ const App = () => (
                   <Credit />
                 </ProtectedRoute>
               } />
+              <Route path="/about" element={<About />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/help" element={<Help />} />
+              <Route path="/privacy" element={<Privacy />} />
+              <Route path="/contact" element={<Contact />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

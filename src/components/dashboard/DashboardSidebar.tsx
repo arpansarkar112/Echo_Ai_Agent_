@@ -5,7 +5,11 @@ import {
   History,
   LogOut,
   Bot,
-  Info
+  Info,
+  LayoutDashboard,
+  Users,
+  Settings,
+  BarChart
 } from "lucide-react";
 import {
   Sidebar,
@@ -20,22 +24,32 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { ModeToggle } from "@/components/ui/mode-toggle";
+import { useProfile } from "@/hooks/use-profile";
 
-const navigation = [
-  { name: "Chat", href: "/dashboard", icon: MessageSquare },
+const userNavigation = [
+  { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
+  { name: "New Chat", href: "/dashboard/chat", icon: MessageSquare },
   { name: "Past Chats", href: "/dashboard/chats", icon: History },
   { name: "Profile", href: "/dashboard/profile", icon: User },
   { name: "Credit", href: "/dashboard/credit", icon: Info },
+  { name: "Settings", href: "/dashboard/settings", icon: Settings },
+];
+
+const adminNavigation = [
+  { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Manage Users", href: "/dashboard/users", icon: Users },
+  { name: "Analytics", href: "/dashboard/analytics", icon: BarChart },
+  { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export function DashboardSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const { signOut } = useAuth();
+  const { data: profile } = useProfile();
   
   const collapsed = state === "collapsed";
-  const isActive = (path: string) => location.pathname === path;
+  const navigation = profile?.role === "admin" ? adminNavigation : userNavigation;
 
   return (
     <Sidebar className={collapsed ? "w-16" : "w-64"} collapsible="icon">
@@ -54,7 +68,7 @@ export function DashboardSidebar() {
         </div>
         
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>{profile?.role === 'admin' ? 'Admin Menu' : 'Main Menu'}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navigation.map((item) => (
@@ -62,6 +76,7 @@ export function DashboardSidebar() {
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.href}
+                      end={item.href === "/dashboard"}
                       className={({ isActive }) =>
                         `flex items-center gap-3 px-3 py-2 rounded-lg transition-smooth ${
                           isActive
