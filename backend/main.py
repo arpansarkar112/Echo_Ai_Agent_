@@ -490,7 +490,7 @@ async def get_profile(client: Client = Depends(get_authenticated_client)):
     try:
         user_id = client.auth.get_user().user.id
         # Use a standard select and check the result, which is more robust
-        res = client.table("profiles").select("full_name, display_name, role").eq("id", user_id).execute()
+        res = client.table("profiles").select("full_name, display_name").eq("id", user_id).execute()
         
         # If no data is returned, it means no profile exists yet.
         if not res.data:

@@ -52,6 +52,11 @@ const App = () => (
                   <Dashboard component="chat-session" />
                 </ProtectedRoute>
               } />
+              <Route path="/dashboard/settings" element={
+                <ProtectedRoute>
+                  <Dashboard component="settings" />
+                </ProtectedRoute>
+              } />
               <Route path="/dashboard/profile" element={
                 <ProtectedRoute>
                   <Profile />

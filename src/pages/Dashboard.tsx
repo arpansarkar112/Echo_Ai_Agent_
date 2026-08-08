@@ -7,6 +7,7 @@ import { ModeToggle } from "@/components/ui/mode-toggle";
 import DashboardOverview from "./DashboardOverview";
 import PastChats from "./PastChats";
 import ChatSession from "./ChatSession";
+import SettingsPage from "./Settings";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,7 +21,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 interface DashboardProps {
-  component?: "overview" | "chat" | "past-chats" | "chat-session";
+  component?: "overview" | "chat" | "past-chats" | "chat-session" | "settings";
 }
 
 export default function Dashboard({ component = "overview" }: DashboardProps) {
@@ -41,6 +42,8 @@ export default function Dashboard({ component = "overview" }: DashboardProps) {
         return <PastChats />;
       case "chat-session":
         return <ChatSession />;
+      case "settings":
+        return <SettingsPage />;
       case "overview":
       default:
         return <DashboardOverview />;
